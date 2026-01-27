@@ -11,7 +11,7 @@ class DocumentLoaderService:
             web_paths=(url,),
             bs_kwargs={"parse_only": bs4_strainer},
         )
-        docs = loader.load()
+        docs = await loader.aload()
         print("Contenu du site web chargé")
         assert len(docs) == 1
         print(f"Total characters: {len(docs[0].page_content)}")
@@ -22,7 +22,7 @@ class DocumentLoaderService:
     
     async def load_txt(self, file_path: str) -> str:
         loader = DirectoryLoader(file_path, glob="**/*.txt")
-        docs = loader.load()
+        docs = await loader.aload()
         print("Contenu du fichier texte chargé")
         
         return docs

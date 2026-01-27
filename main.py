@@ -3,32 +3,35 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from langchain_ollama import ChatOllama
-from langchain_chroma import Chroma
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import WebBaseLoader
 
-# 1. Load documents
-loader = WebBaseLoader("https://en.wikipedia.org/wiki/Artificial_intelligence")
-docs = loader.load()
+from src.text_splitter.services import TextSplitterService
+from src.documents_loader.services import DocumentLoaderService
+from src.embedding.services import EmbeddingService
+from src.vectorstore.services import VectorStoreService
 
-# 2. Split documents
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-splits = text_splitter.split_documents(docs)
 
-# 3. Create embeddings and store in Chroma
-vectorstore = Chroma.from_documents(
-    documents=splits,
-    collection_name="ai_docs",
-    embedding=OllamaEmbeddings(model="nomic-embed-text"),
-    persist_directory="./db/.chroma_db"
-)
 
-# 4. Create RAG chain
-llm = ChatOllama(model="llama3.2")
-retriever = vectorstore.as_retriever()
 
-chain = (retriever | llm).with_structured_output(Answer)
+async def main():
+    # 1. Load documents
+    docs = DocumentLoaderService().load_website("https://en.wikipedia.org/wiki/Artificial_intelligence")
 
-# 5. Ask questions
-print(chain.invoke({"messages": [{"role": "user", "content": "What is AI?"}]}))
+
+    # 2. Split documents
+    chunks = TextSplitterService().split_text(docs)
+
+    # 3. Create embeddings and store in Chroma
+    embedings = EmbeddingService().ollama_embeddings()
+    vectorstore = VectorStoreService().chroma_vectorstore(embedings)
+
+    # 4. Create RAG chain
+    llm = ChatOllama(model="llama3.2")
+    retriever = vectorstore.as_retriever()
+
+    chain = (retriever | llm).with_structured_output(Answer)
+
+    # 5. Ask questions
+    print(chain.invoke({"messages": [{"role": "user", "content": "What is AI?"}]}))
+
+if __name__ == "__main__":
+    asyncio.run(main())

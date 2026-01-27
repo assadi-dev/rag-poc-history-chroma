@@ -1,0 +1,12 @@
+
+import asyncio
+from langchain_ollama import OllamaEmbeddings
+
+
+class EmbeddingService:
+ 
+   def ollama_embeddings(self):
+    embeddings = OllamaEmbeddings(model="nomic-embed-text")
+    return embeddings
+
+   
