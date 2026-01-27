@@ -1,7 +1,9 @@
-# Documents de démonstration
+from langchain_core.documents import Document
+
+# Documents de démonstration convertis en objets Document LangChain
 DEMO_DOCUMENTS = [
-    {
-        "page_content": """
+    Document(
+        page_content="""
 LangChain est un framework open-source pour développer des applications 
 alimentées par des modèles de langage (LLM). Il permet de créer des chaînes 
 de traitement combinant des LLMs avec d'autres sources de données et outils.
@@ -14,10 +16,10 @@ Les principaux composants de LangChain sont:
 - Memory: Gestion de la mémoire de conversation
 - Retrieval: Récupération de documents pertinents
         """,
-        "metadata": {"source": "langchain_intro", "topic": "langchain"}
-    },
-    {
-        "page_content": """
+        metadata={"source": "langchain_intro", "topic": "langchain"}
+    ),
+    Document(
+        page_content="""
 Pour installer LangChain, utilisez pip:
 
 pip install langchain langchain-community
@@ -27,10 +29,10 @@ pip install langchain[all]
 
 LangChain nécessite Python 3.8 ou supérieur.
         """,
-        "metadata": {"source": "langchain_install", "topic": "langchain"}
-    },
-    {
-        "page_content": """
+        metadata={"source": "langchain_install", "topic": "langchain"}
+    ),
+    Document(
+        page_content="""
 Ollama est un outil permettant d'exécuter des LLMs localement sur votre machine.
 Il supporte de nombreux modèles comme Llama, Mistral, et Gemma.
 
@@ -41,10 +43,10 @@ Installation d'Ollama:
 Pour télécharger un modèle: ollama pull llama3
 Pour lancer un modèle: ollama run llama3
         """,
-        "metadata": {"source": "ollama_intro", "topic": "ollama"}
-    },
-    {
-        "page_content": """
+        metadata={"source": "ollama_intro", "topic": "ollama"}
+    ),
+    Document(
+        page_content="""
 pgvector est une extension PostgreSQL pour le stockage et la recherche 
 de vecteurs. Elle est idéale pour les applications de recherche sémantique
 et de RAG (Retrieval-Augmented Generation).
@@ -64,10 +66,10 @@ SELECT * FROM items
 ORDER BY embedding <=> query_vector 
 LIMIT 5;
         """,
-        "metadata": {"source": "pgvector_intro", "topic": "pgvector"}
-    },
-    {
-        "page_content": """
+        metadata={"source": "pgvector_intro", "topic": "pgvector"}
+    ),
+    Document(
+        page_content="""
 Le RAG (Retrieval-Augmented Generation) est une technique qui combine 
 la recherche d'information avec la génération de texte par un LLM.
 
@@ -82,10 +84,10 @@ Avantages du RAG:
 - Réduction des hallucinations
 - Possibilité de citer les sources
         """,
-        "metadata": {"source": "rag_concept", "topic": "rag"}
-    },
-    {
-        "page_content": """
+        metadata={"source": "rag_concept", "topic": "rag"}
+    ),
+    Document(
+        page_content="""
 Python est un langage de programmation interprété, de haut niveau et 
 à usage général. Créé par Guido van Rossum, Python est connu pour sa 
 syntaxe claire et sa lisibilité.
@@ -99,6 +101,6 @@ Caractéristiques principales:
 
 Installation: Téléchargez depuis python.org ou utilisez pyenv.
         """,
-        "metadata": {"source": "python_intro", "topic": "python"}
-    },
+        metadata={"source": "python_intro", "topic": "python"}
+    ),
 ]

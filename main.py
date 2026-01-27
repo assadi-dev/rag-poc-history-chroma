@@ -25,11 +25,11 @@ async def main():
 
     # 3. Create embeddings and store in Chroma
     embedings =  EmbeddingService().ollama_embeddings()
-    vectorstore = VectorStoreService().chroma_vectorstore(embedings)
+   # vectorstore = VectorStoreService().chroma_vectorstore(embedings)
 
     # 4. Create RAG chain
    # llm = ChatOllama(model="llama3.2")
-    retriever = RetrieverService().chroma_retriever_by_similarity(vectorstore, "What is AI?")
+   # retriever = RetrieverService().chroma_retriever_by_similarity(vectorstore, "What is AI?")
 
   #  chain = (retriever | llm).with_structured_output(Answer)
 
