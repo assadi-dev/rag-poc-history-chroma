@@ -13,9 +13,7 @@ from src.retriever.services import RetrieverService
 from src.documents_loader.mocks.document_content_mock import DEMO_DOCUMENTS
 
 
-
-
-async def main():
+async def setup_vectorstore():
     # 1. Load documents
     docs = DEMO_DOCUMENTS
 
@@ -28,11 +26,15 @@ async def main():
     vectorstore = VectorStoreService().chroma_vectorstore(embedings)
 
     # 4. Add chunks to vectorstore
-    vectorstore.from_documents(chunks, embedings)
+    vectorstore.add_documents(chunks)
 
-    # 5. Create RAG chain
+async def main():
+    #vectorstore = await setup_vectorstore()
+
+
+    # 1. Create RAG chain
    # llm = ChatOllama(model="llama3.2")
-   # retriever = RetrieverService().chroma_retriever_by_similarity(vectorstore, "What is AI?")
+    retriever = RetrieverService().chroma_retriever_by_similarity(vectorstore, "What is Python?")
 
   #  chain = (retriever | llm).with_structured_output(Answer)
 
