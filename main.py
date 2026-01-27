@@ -25,7 +25,7 @@ async def main():
 
     # 3. Create embeddings and store in Chroma
     embedings =  EmbeddingService().ollama_embeddings()
-   # vectorstore = VectorStoreService().chroma_vectorstore(embedings)
+    vectorstore = VectorStoreService().chroma_vectorstore(embedings)
 
     # 4. Create RAG chain
    # llm = ChatOllama(model="llama3.2")
