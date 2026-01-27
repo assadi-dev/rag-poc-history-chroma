@@ -1,4 +1,5 @@
 import os
+import asyncio
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -8,13 +9,14 @@ from src.text_splitter.services import TextSplitterService
 from src.documents_loader.services import DocumentLoaderService
 from src.embedding.services import EmbeddingService
 from src.vectorstore.services import VectorStoreService
+from src.retriever.services import RetrieverService
 
 
 
 
 async def main():
     # 1. Load documents
-    docs = DocumentLoaderService().load_website("https://en.wikipedia.org/wiki/Artificial_intelligence")
+    docs = await DocumentLoaderService().load_website("https://en.wikipedia.org/wiki/Artificial_intelligence")
 
 
     # 2. Split documents
@@ -25,13 +27,16 @@ async def main():
     vectorstore = VectorStoreService().chroma_vectorstore(embedings)
 
     # 4. Create RAG chain
-    llm = ChatOllama(model="llama3.2")
-    retriever = vectorstore.as_retriever()
+   # llm = ChatOllama(model="llama3.2")
+    retriever = RetrieverService().chroma_retriever_by_similarity(vectorstore, "What is AI?")
 
-    chain = (retriever | llm).with_structured_output(Answer)
+  #  chain = (retriever | llm).with_structured_output(Answer)
 
     # 5. Ask questions
-    print(chain.invoke({"messages": [{"role": "user", "content": "What is AI?"}]}))
+  #  print(chain.invoke({"messages": [{"role": "user", "content": "What is AI?"}]}))
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        pass

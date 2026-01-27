@@ -8,13 +8,12 @@ class DocumentLoaderService:
     async def load_website(self, url: str) -> str:
         bs4_strainer = bs4.SoupStrainer(class_=("post-title", "post-header", "post-content"))
         loader = WebBaseLoader(
-            web_paths=(url,),
+            web_paths=(url),
             bs_kwargs={"parse_only": bs4_strainer},
         )
         docs = await loader.aload()
         print("Contenu du site web chargé")
-        assert len(docs) == 1
-        print(f"Total characters: {len(docs[0].page_content)}")
+
         return docs
     
     async def load_pdf(self, file_path: str) -> str:
