@@ -28,10 +28,15 @@ async def setup_vectorstore():
     # 4. Add chunks to vectorstore
     vectorstore.add_documents(chunks)
 
+    return vectorstore
+    
+
+
 async def main():
-    #vectorstore = await setup_vectorstore()
+  #  vectorstore = await setup_vectorstore()
 
-
+    embedings =  EmbeddingService().ollama_embeddings()
+    vectorstore = VectorStoreService().chroma_vectorstore(embedings)
     # 1. Create RAG chain
    # llm = ChatOllama(model="llama3.2")
     retriever = RetrieverService().chroma_retriever_by_similarity(vectorstore, "What is Python?")

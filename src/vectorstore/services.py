@@ -16,6 +16,6 @@ class VectorStoreService:
         vectorstore = Chroma(
             collection_name="ai_docs",
             embedding_function=embedding_fn,
-            persist_directory="../databases/.chroma_db"
+            persist_directory="./src/databases/.chroma_db"
         )
         return vectorstore
