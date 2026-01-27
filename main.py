@@ -10,20 +10,21 @@ from src.documents_loader.services import DocumentLoaderService
 from src.embedding.services import EmbeddingService
 from src.vectorstore.services import VectorStoreService
 from src.retriever.services import RetrieverService
+from src.documents_loader.mocks.document_content_mock import DEMO_DOCUMENTS
 
 
 
 
 async def main():
     # 1. Load documents
-    docs = await DocumentLoaderService().load_website("https://en.wikipedia.org/wiki/Artificial_intelligence")
+    docs = DEMO_DOCUMENTS
 
 
     # 2. Split documents
     chunks = TextSplitterService().split_text(docs)
 
     # 3. Create embeddings and store in Chroma
-    embedings = EmbeddingService().ollama_embeddings()
+    embedings =  EmbeddingService().ollama_embeddings()
     vectorstore = VectorStoreService().chroma_vectorstore(embedings)
 
     # 4. Create RAG chain
