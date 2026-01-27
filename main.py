@@ -42,7 +42,7 @@ def dynamic_prompt_middleware(request: ModelRequest):
 
     system_message = (
       "Tu es un assistant spécialisé en Intelligence Artificielle et en RAG, Utilise les informations suivantes pour répondre à la question:",
-    f"\n\n: {doc_content}"
+    f"\n\n: {doc_content} \n\n si tu ne trouve pas la réponse dans les informations ci-dessus, dis que tu ne sais pas et ne donne pas d'information qui n'est pas dans les informations ci-dessus \n\n Maintiens une conversation naturelle en tenant compte de l'historique."
     )
 
     return system_message
