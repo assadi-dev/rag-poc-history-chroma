@@ -5,6 +5,7 @@ from src.embedding.services import EmbeddingService
 from src.vectorstore.services import VectorStoreService
 from langchain.agents import create_agent
 from langgraph.checkpoint.memory import InMemorySaver
+from langchain_core.prompts import ChatPromptTemplate
 
 
 
@@ -20,8 +21,15 @@ class ChatService:
         
     def ollama_answer(self, query: str):
         llm = ChatOllama(model=self.model, temperature=self.temperature)
-        inputs =  {"messages": [{"role": "user", "content": query}]}
+        prompt_template = ChatPromptTemplate.from_messages(
+            [
+                ("system", "You are a helpful assistant. Your name is Alex."),
+                ("human", "{question}"),
+            ]
+        )
+        inputs =  {"messages": prompt_template.format_messages(question=query)}
         agent = create_agent(llm, tools=[],middleware=self.middleware,checkpointer=self.checkpointer)
+
       
         for step in agent.stream(
             inputs ,

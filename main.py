@@ -16,20 +16,42 @@ load_dotenv()
 
 @dynamic_prompt
 def dynamic_prompt_middleware(request: ModelRequest):
+    # 1. Récupérer le dernier message utilisateur (robuste)
+    last_user_message = request.state["messages"][-1].text
+
+    # 2. RAG
     embeddings = EmbeddingService().ollama_embeddings()
-    last_query = request.state["messages"][-1].text
+    last_query = last_user_message
     vectorstore = VectorStoreService().chroma_vectorstore(embeddings)
-    retrieved_docs = vectorstore.similarity_search(last_query)
+    retrieved_docs = vectorstore.similarity_search(last_query,k=5)
 
     doc_content = "\n\n".join([doc.page_content for doc in retrieved_docs])
 
-    system_message = (
-        "Tu es Simon un assistant spécialisé en Intelligence Artificielle et en RAG, Utilise les informations suivantes pour répondre à la question:"
-        f"\n\n: {doc_content} \n\n si tu ne trouve pas la réponse dans les informations ci-dessus, dis que tu ne sais pas et ne donne pas d'information qui n'est pas dans les informations ci-dessus \n\n "
-        "Maintiens une conversation naturelle en tenant compte de l'historique."
-    )
+    if not retrieved_docs:
+        return (
+            "Aucune information pertinente n’a été trouvée dans la base de connaissances. "
+            "Si la réponse n’est pas présente dans le contexte fourni, réponds explicitement "
+            "que tu ne sais pas."
+        )
 
-    return system_message
+    context = "\n\n".join(doc.page_content for doc in retrieved_docs)
+
+    # 3. System prompt RAG strict
+    system_prompt = f"""
+        Tu es un assistant expert en Intelligence Artificielle et en RAG.
+
+        Règles strictes :
+        - Utilise UNIQUEMENT les informations du contexte ci-dessous
+        - Si la réponse n’est pas présente dans le contexte, dis clairement que tu ne sais pas
+        - N’invente aucune information
+        - Réponds de manière naturelle en tenant compte de l’historique de la conversation
+
+        Contexte :
+        {context}
+        """.strip()
+
+    return system_prompt
+
 
 async def main():
     thread_id = str(uuid.uuid4())
