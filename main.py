@@ -33,13 +33,14 @@ def dynamic_prompt_middleware(request: ModelRequest):
 
 async def main():
     thread_id = str(uuid.uuid4())
+    user_id = "1"
 
     embedings =  EmbeddingService().ollama_embeddings()
     vectorstore = VectorStoreService().chroma_vectorstore(embedings)
 
     model = "llama3.2"
     temperature = 0.3
-    chatService = ChatService(model, temperature,[dynamic_prompt_middleware],thread_id)
+    chatService = ChatService(model, temperature,[dynamic_prompt_middleware],thread_id,user_id)
 
 
 

@@ -9,13 +9,14 @@ from langgraph.checkpoint.memory import InMemorySaver
 
 
 class ChatService:
-    def __init__(self, model: str, temperature: float,middleware,thread_id:str):
+    def __init__(self, model: str, temperature: float,middleware,thread_id:str,user_id:str):
         self.model = model
         self.temperature = temperature
         self.console = Console()
         self.middleware = middleware
         self.checkpointer = InMemorySaver()
         self.thread_id = thread_id
+        self.user_id = user_id
         
     def ollama_answer(self, query: str):
         llm = ChatOllama(model=self.model, temperature=self.temperature)
@@ -24,10 +25,10 @@ class ChatService:
       
         for step in agent.stream(
             inputs ,
-            config={"configurable": {"thread_id": self.thread_id}},
+            config={"configurable": {"thread_id": self.thread_id,"user_id": self.user_id}},
             stream_mode="values",
         ):
-         
+       
             # Capture the last message
            message = step["messages"][-1].content
 
