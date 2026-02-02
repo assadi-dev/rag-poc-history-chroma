@@ -1,5 +1,6 @@
 import os
 import asyncio
+import uuid
 from dotenv import load_dotenv
 from src.embedding.services import EmbeddingService
 from src.vectorstore.services import VectorStoreService
@@ -23,21 +24,22 @@ def dynamic_prompt_middleware(request: ModelRequest):
     doc_content = "\n\n".join([doc.page_content for doc in retrieved_docs])
 
     system_message = (
-        "Tu es un assistant spécialisé en Intelligence Artificielle et en RAG, Utilise les informations suivantes pour répondre à la question:",
-        f"\n\n: {doc_content} \n\n si tu ne trouve pas la réponse dans les informations ci-dessus, dis que tu ne sais pas et ne donne pas d'information qui n'est pas dans les informations ci-dessus \n\n Maintiens une conversation naturelle en tenant compte de l'historique."
+        "Tu es Simon un assistant spécialisé en Intelligence Artificielle et en RAG, Utilise les informations suivantes pour répondre à la question:"
+        f"\n\n: {doc_content} \n\n si tu ne trouve pas la réponse dans les informations ci-dessus, dis que tu ne sais pas et ne donne pas d'information qui n'est pas dans les informations ci-dessus \n\n "
+        "Maintiens une conversation naturelle en tenant compte de l'historique."
     )
 
     return system_message
 
 async def main():
-
+    thread_id = str(uuid.uuid4())
 
     embedings =  EmbeddingService().ollama_embeddings()
     vectorstore = VectorStoreService().chroma_vectorstore(embedings)
 
     model = "llama3.2"
     temperature = 0.3
-    chatService = ChatService(model, temperature,[dynamic_prompt_middleware])
+    chatService = ChatService(model, temperature,[dynamic_prompt_middleware],thread_id)
 
 
 
